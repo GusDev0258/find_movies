@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
-  const [movies, setMovies] = useState();
-  
+  const [movie, setMovie] = useState("");
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.introductionContainer}>
@@ -12,6 +12,12 @@ export default function Index() {
         <Text>Hoje é um ótimo dia para assitir filmes 🍿</Text>
       </View>
       <View>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Procure filmes"
+          onChangeText={(newText) => setMovie(newText)}
+          defaultValue={movie}
+        />
       </View>
     </SafeAreaView>
   );
@@ -31,11 +37,18 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "flex-start",
     justifyContent: "center",
-    paddingHorizontal: 12
+    paddingHorizontal: 12,
   },
   userGreeting: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#333"
-  }
+    color: "#333",
+  },
+  searchInput: {
+    height: 40,
+    borderColor: "#333",
+    borderWidth: 2,
+    borderStyle: "solid",
+    backgroundColor: "transparent",
+  },
 });
