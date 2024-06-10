@@ -5,8 +5,8 @@ export interface Movie {
   title: string;
   genres: Genre[];
   overview: string;
-  posterPath: string;
-  backdropPath: string;
-  releaseDate: string;
+  poster_path: string;
+  backdrop_path: string;
+  release_date: string;
   adult: boolean;
 }

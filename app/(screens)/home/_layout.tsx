@@ -5,8 +5,7 @@ export default function Layout() {
   return (
     <SafeAreaProvider>
       <Stack>
-        <Stack.Screen name="home/index" options={{ title: "Tela inicial" }} />
-        <Stack.Screen name="search/query" options={{ title: "Tela inicial" }} />
+        <Stack.Screen name="index" options={{ title: "Tela inicial" }} />
       </Stack>
     </SafeAreaProvider>
   );
