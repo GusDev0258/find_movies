@@ -12,28 +12,17 @@ import {
   FlatList,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { findMovieByName } from "@/hooks/fetch-movies-by-name";
 import { findPopularMovies } from "@/hooks/fetch-popular-movies";
+import { Link } from "expo-router";
 import { Movie } from "@/model/movie";
 import MovieCard from "@/components/movie-card";
-import mockPopularMovies from "@/mock/movie-mock";
 
 export default function Index() {
-  const [movie, setMovie] = useState("");
-  const [result, setResult] = useState<Movie | null>(null);
   const [popularMovies, setPopularMovies] = useState<Movie[] | null>(null);
 
-  const handleMovieSearch = async () => {
-    if (movie.trim() !== "") {
-      const res = await findMovieByName(movie);
-      if (res) {
-        setResult(res);
-      }
-    }
-  };
-  // useEffect(() => {
-  //   findPopularMovies().then((data) => setPopularMovies(data));
-  // }, []);
+  useEffect(() => {
+    findPopularMovies().then((data) => setPopularMovies(data));
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -48,26 +37,21 @@ export default function Index() {
               <Text>Hoje é um ótimo dia para assistir filmes 🍿</Text>
             </View>
             <View style={styles.searchContainer}>
-              <TextInput
-                style={styles.searchInput}
-                placeholder="Procure filmes"
-                onChangeText={setMovie}
-                value={movie}
-              />
-              <Pressable style={styles.button} onPress={handleMovieSearch}>
-                <Text style={styles.buttonText}>Pesquisar</Text>
-              </Pressable>
+              <Link href="/home/search/" asChild>
+                <Pressable style={styles.button}>
+                  <Text style={styles.buttonText}>Pesquisar Títulos</Text>
+                </Pressable>
+              </Link>
             </View>
-            {result && <Text>{result.title}</Text>}
           </View>
         </TouchableWithoutFeedback>
         <View style={styles.listContainer}>
           <Text style={styles.listTitle}>Filmes Populares no Brasil</Text>
           <FlatList
-            data={mockPopularMovies.results}
+            data={popularMovies}
             renderItem={({ item }) => <MovieCard movie={item} />}
             numColumns={2}
-            keyExtractor={(item) => item.id.toString()} // Ensure item.id is a string or number
+            keyExtractor={(item) => item.id.toString()} 
           />
         </View>
       </KeyboardAvoidingView>
@@ -79,7 +63,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    height: "100%"
+    height: "100%",
   },
   inner: {
     flex: 1,
@@ -118,11 +102,11 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     height: "50%",
-    marginTop: 10
+    marginTop: 10,
   },
   listTitle: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 18,
-    marginBottom: 4 
-  }
+    marginBottom: 4,
+  },
 });

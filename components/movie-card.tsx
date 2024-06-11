@@ -1,17 +1,20 @@
 import { Movie } from "@/model/movie";
 import { Image } from "expo-image";
+import { Link } from "expo-router";
 import { StyleSheet, View, Text } from "react-native";
 
 export default function MovieCard({ movie }: { movie: Movie }) {
   return (
     <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <Image
-          style={styles.imageCard}
-          source={`https://image.tmdb.org/t/p/w600_and_h900_bestv2/${movie.poster_path}`}
-          contentFit="fill"
-        />
-      </View>
+      <Link href={`home/movie/${movie.id}`}>
+        <View style={styles.imageContainer}>
+          <Image
+            style={styles.imageCard}
+            source={`https://image.tmdb.org/t/p/w600_and_h900_bestv2/${movie.poster_path}`}
+            contentFit="fill"
+          />
+        </View>
+      </Link>
       <Text style={styles.movieTitle}>{movie.title}</Text>
     </View>
   );
@@ -34,9 +37,9 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 6,
     shadowOpacity: 0.4,
-    shadowOffset: {width: 6, height: 4},
+    shadowOffset: { width: 6, height: 4 },
     shadowRadius: 3,
-    shadowColor: '#898'
+    shadowColor: "#898",
   },
   imageCard: {
     width: 144,
