@@ -1,6 +1,10 @@
 import { View, Text, StyleSheet } from "react-native";
 import { Review } from "@/model/review";
 import { Image } from "expo-image";
+import {
+  DEFAULT_PROFILE_PICTURE,
+  DEFAULT_PROFILE_PICTURE_URL,
+} from "@/constants/image-url";
 
 export default function ReviewCard({ review }: { review: Review }) {
   const reviewDate = `${review.created_at.split("-")[1]}/${review.created_at.split("-")[0]}`;
@@ -9,18 +13,28 @@ export default function ReviewCard({ review }: { review: Review }) {
       <View style={styles.reviewInfoContainer}>
         <View style={styles.reviewAuthorContainer}>
           <Image
-            source={`https://media.themoviedb.org/t/p/w150_and_h150_face/${review.author_details.avatar_path}`}
+            source={
+              review.author_details?.avatar_path
+                ? `${DEFAULT_PROFILE_PICTURE_URL}${review.author_details.avatar_path}`
+                : `${DEFAULT_PROFILE_PICTURE}`
+            }
             style={styles.avatarImage}
             contentFit="cover"
           />
           <View style={styles.reviewInfo}>
-            <Text style={styles.authorName}>{review.author}</Text>
-            <Text style={styles.reviewDate}>{reviewDate}</Text>
+            <Text style={styles.authorName}>
+              {review.author ? review.author : "anonymous"}
+            </Text>
+            <Text style={styles.reviewDate}>
+              {reviewDate ? reviewDate : "no date"}
+            </Text>
           </View>
         </View>
         <View style={styles.reviewDateContainer}>
           <Text style={styles.authorRating}>
-            Nota: {review.author_details.rating} / 10.0
+            Nota:{" "}
+            {review.author_details?.rating ? review.author_details.rating : "0"}{" "}
+            / 10.0
           </Text>
         </View>
       </View>

@@ -1,3 +1,7 @@
+import {
+  DEFAULT_IMAGE_URL,
+  DEFAULT_MOVIE_PICTURE,
+} from "@/constants/image-url";
 import { Movie } from "@/model/movie";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
@@ -10,12 +14,18 @@ export default function MovieCard({ movie }: { movie: Movie }) {
         <View style={styles.imageContainer}>
           <Image
             style={styles.imageCard}
-            source={`https://image.tmdb.org/t/p/w600_and_h900_bestv2/${movie.poster_path}`}
+            source={
+              movie.poster_path
+                ? `${DEFAULT_IMAGE_URL}${movie.poster_path}`
+                : `${DEFAULT_MOVIE_PICTURE}`
+            }
             contentFit="fill"
           />
         </View>
       </Link>
-      <Text style={styles.movieTitle}>{movie.title}</Text>
+      <Text style={styles.movieTitle}>
+        {movie.title ? movie.title : "Título não encontrado"}
+      </Text>
     </View>
   );
 }

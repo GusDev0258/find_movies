@@ -1,4 +1,8 @@
 import ReviewCard from "@/components/review-card";
+import {
+  DEFAULT_IMAGE_URL,
+  DEFAULT_MOVIE_PICTURE,
+} from "@/constants/image-url";
 import findReviewsByMovieId from "@/hooks/fetch-movie-review";
 import findMovieByid from "@/hooks/fetch-movies-by-id";
 import mockPopularMovies from "@/mock/movie-mock";
@@ -12,7 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 enum TAB {
   INFO_TAB = 0,
-  RATING_TAB = 1,
+  REVIEW_TAB = 1,
 }
 
 export default function MovieScreen() {
@@ -23,7 +27,20 @@ export default function MovieScreen() {
   );
   const currentMovieYear = currentMovie?.release_date.split("-")[0];
   const [currentTab, setCurrentTab] = useState<TAB>(0);
-
+  const movieFirstGenre = currentMovie?.genres[0]?.name
+    ? currentMovie.genres[0].name
+    : "none";
+  const movieSecondGenre = currentMovie?.genres[1]?.name
+    ? `/ ${currentMovie.genres[1]?.name}`
+    : "none";
+  const movieRuntime = currentMovie?.runtime
+    ? `${currentMovie.runtime} min`
+    : "60 min";
+  const movieAverageCount = currentMovie?.vote_average
+    ? currentMovie.vote_average
+    : "0.0";
+  const movieLikes = currentMovie?.vote_count ? currentMovie.vote_count : "0";
+  const movieOverview = currentMovie?.overview ?  currentMovie.overview : "Sem sinopse sobre este filme"
   useEffect(() => {
     setCurrentMovie(mockPopularMovies.results[0]);
   }, []);
@@ -58,16 +75,24 @@ export default function MovieScreen() {
       <SafeAreaView>
         <View style={styles.imageBackgroundContainer}>
           <Image
-            source={`https://image.tmdb.org/t/p/w600_and_h900_bestv2/${currentMovie.backdrop_path}`}
+            source={
+              currentMovie.backdrop_path
+                ? `${DEFAULT_IMAGE_URL}${currentMovie.backdrop_path}`
+                : `${DEFAULT_MOVIE_PICTURE}`
+            }
             contentFit="cover"
-            contentPosition="top"
+            contentPosition="center"
             style={styles.imageBackground}
           />
         </View>
         <View style={styles.movieInfoContainer}>
           <View style={styles.posterImageContainer}>
             <Image
-              source={`https://image.tmdb.org/t/p/w600_and_h900_bestv2/${currentMovie.poster_path}`}
+              source={
+                currentMovie.backdrop_path
+                  ? `${DEFAULT_IMAGE_URL}${currentMovie.poster_path}`
+                  : `${DEFAULT_MOVIE_PICTURE}`
+              }
               contentFit="cover"
               style={styles.posterImage}
             />
@@ -80,51 +105,49 @@ export default function MovieScreen() {
                 {currentMovieYear} |
               </Text>
               <Text style={styles.movieSecondaryInfo}>
-                {currentMovie.genres[0].name}{" "}
-                {currentMovie.genres[1]?.name
-                  ? `/ ${currentMovie.genres[1]?.name}`
-                  : ""}
+                {movieFirstGenre} {" / "}
+                {movieSecondGenre}
               </Text>
-              <Text style={styles.movieSecondaryInfo}>
-                | {currentMovie.runtime} minutos
-              </Text>
+              <Text style={styles.movieSecondaryInfo}>| {movieRuntime}</Text>
             </View>
             <View style={styles.movieSecondaryInfoContainer}>
               <Text style={styles.movieSecondaryInfo}>
-                ⭐ {currentMovie.vote_average} / 10.0{" "}
+                ⭐ {movieAverageCount} / 10.0
               </Text>
               <Text style={styles.movieSecondaryInfo}>
-                ❤️ {currentMovie.vote_count} likes
+                ❤️ {movieLikes} likes
               </Text>
             </View>
           </View>
         </View>
         <View style={styles.movieTopicsContainer}>
           <View style={styles.tabList}>
-            <Pressable style={getTabStyle(0)} onPress={() => setCurrentTab(0)}>
-              <Text style={{ fontSize: 12 }}>Sinopse</Text>
+            <Pressable
+              style={getTabStyle(TAB.INFO_TAB)}
+              onPress={() => setCurrentTab(TAB.INFO_TAB)}
+            >
+              <Text style={styles.tabTitle}>Sinopse</Text>
             </Pressable>
-            <Pressable style={getTabStyle(1)} onPress={() => setCurrentTab(1)}>
-              <Text style={{ fontSize: 12 }}>Avaliações</Text>
+            <Pressable
+              style={getTabStyle(TAB.REVIEW_TAB)}
+              onPress={() => setCurrentTab(TAB.REVIEW_TAB)}
+            >
+              <Text style={styles.tabTitle}>Avaliações</Text>
             </Pressable>
           </View>
-          {currentTab == 0 && (
+          {currentTab == TAB.INFO_TAB && (
             <View style={styles.topicContainer}>
-              <Text
-                style={{ fontSize: 14, fontWeight: "bold", marginBottom: 4 }}
-              >
-                Sobre o filme
-              </Text>
-              <Text>{currentMovie.overview}</Text>
+              <Text style={styles.aboutMovie}>Sobre o filme</Text>
+              <Text>{movieOverview}</Text>
             </View>
           )}
-          {currentTab == 1 && (
+          {currentTab == TAB.REVIEW_TAB && (
             <View style={styles.topicContainer}>
               <FlatList
                 data={currentMovieReviews}
                 renderItem={({ item }) => <ReviewCard review={item} />}
                 numColumns={2}
-                keyExtractor={(item) => item.id.toString()} // Ensure item.id is a string or number
+                keyExtractor={(item) => item.id.toString()}
               />
             </View>
           )}
@@ -228,5 +251,9 @@ const styles = StyleSheet.create({
   },
   topicContainer: {
     marginTop: 12,
+  },
+  aboutMovie: { fontSize: 14, fontWeight: "bold", marginBottom: 4 },
+  tabTitle: {
+    fontSize: 12,
   },
 });

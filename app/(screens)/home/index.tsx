@@ -51,7 +51,7 @@ export default function Index() {
             data={popularMovies}
             renderItem={({ item }) => <MovieCard movie={item} />}
             numColumns={2}
-            keyExtractor={(item) => item.id.toString()} 
+            keyExtractor={(item) => item.id.toString()}
           />
         </View>
       </KeyboardAvoidingView>
