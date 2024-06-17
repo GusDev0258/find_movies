@@ -15,7 +15,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function SearchScreen() {
   const [movie, setMovie] = useState("");
   const [movies, setMovies] = useState<Movie[] | []>([]);
-  console.log(movies)
   const handleMovieSearch = () => {
     if (movie != "") {
       findMovieByName(movie).then((data) => setMovies(data));
